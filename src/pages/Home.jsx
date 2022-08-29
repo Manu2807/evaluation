@@ -30,6 +30,24 @@ const Home = () => {
       .then((res) => res.json())
       .then((res)=>setCount(res.length))
   }
+  function additem(id){
+    fetch(`http://localhost:8080/products/${id}`)
+    .then((res)=>res.json())
+    .then((res)=>cartadd(res))
+    .catch((error)=>console.log(error))
+    
+  }
+  function cartadd(res){
+    fetch(`http://localhost:8080/cartItems/`, {
+      method: "POST",
+     body:JSON.stringify(res),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then((res) => res.json())
+      .then((res)=>setCount(res.length))
+  }
 if(!isAuth){
   navigate("/login")}
 
@@ -51,8 +69,8 @@ if(!isAuth){
     <td>{elem.id}</td>
     <td>{elem.name}</td>
     <td>{elem.description}</td>
-    <td onClick={deleteitem(elem.id)}>add</td>
-    <td>-</td>
+    <td onClick={()=>deleteitem(elem.id)}><button >delete</button></td>
+    <td onClick={()=>additem(elem.id)}>addItem</td>
           </tr>)
         })
       }
